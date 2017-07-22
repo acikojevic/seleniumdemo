@@ -1,4 +1,6 @@
 package com.acikojevic.seleniumdemo.tests;
 
-public class GoogleSearch {
+import com.acikojevic.seleniumdemo.core.TestBase;
+
+public class GoogleSearch extends TestBase {
 }
