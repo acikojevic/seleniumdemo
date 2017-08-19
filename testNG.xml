@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Selenium Demo" verbose="4" thread-count="3" parallel="false">
+    <test name="Google Search Demo">
+        <classes>
+            <class name="com.acikojevic.seleniumdemo.tests.GoogleSearch"/>
+        </classes>
+    </test>
+</suite>
+
+
+
+
+
+
+
+
+
