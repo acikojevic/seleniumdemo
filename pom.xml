@@ -9,9 +9,11 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <selenium.version>3.4.0</selenium.version>
+        <selenium.version>3.6.0</selenium.version>
         <selenium.utils>C:\Selenium</selenium.utils>
         <test.suite>testng.xml</test.suite>
+        <hub.port>4444</hub.port>
+        <node.port>5555</node.port>
     </properties>
 
     <dependencies>
@@ -57,6 +59,93 @@
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
+                        
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+
+                    <!-- start selenium hub -->
+                    <execution>
+                        <id>startHub</id>
+                        <phase>pre-clean</phase>
+                        <configuration>
+                            <target name="StartHub">
+                                <echo>Starting Selenium Hub...</echo>
+                                <java jar="${selenium.utils}\selenium-server-standalone-${selenium.version}.jar"
+                                      spawn="true" fork="true">
+                                    <arg line="-role hub"/>
+                                    <arg line="-port ${hub.port}"/>
+                                </java>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    
+                    <!-- start selenium local node and connect it to hub -->
+                    <execution>
+                        <id>startNode</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <target name="StartNodeLocalhost">
+                                <echo>Starting Selenium Node on localhost...</echo>
+                                <!-- LifecycleServlet servlet included to enable node shutdown trigger -->
+                                <java jar="${selenium.utils}\selenium-server-standalone-${selenium.version}.jar"
+                                      spawn="true" fork="true">
+                                    <arg line="
+                                    -role node
+                                    -port ${node.port}
+                                    -hub http://localhost:${hub.port}/grid/register
+                                    -maxSession 3
+                                    -servlet org.openqa.grid.web.servlet.LifecycleServlet"/>
+                                </java>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                                                
+                    <!-- stopping selenium hub -->
+                    <execution>
+                        <id>stopHub</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <target name="StopHub">
+                                <echo>Stopping Selenium Hub...</echo>
+                                <get taskname="selenium-hub-shutdown"
+                                     src="http://localhost:${hub.port}/lifecycle-manager?action=shutdown"
+                                     dest="StopHub.txt"
+                                     ignoreerrors="false"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                    <!-- stop selenium node -->
+                    <execution>
+                        <id>stopNodeLocalhost</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <target name="StopNodeLocalhost">
+                                <echo>Stopping Selenium Node on localhost...</echo>
+                                <get taskname="selenium-node-shutdown"
+                                     src="http://localhost:${node.port}/extra/LifecycleServlet?action=shutdown"
+                                     dest="StopNode.txt"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                             <goal>run</goal>
+                        </goals>
+                    </execution>
+                 </executions>
+             </plugin>
+            
         </plugins>
     </build>
 
