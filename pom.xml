@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <selenium.version>3.6.0</selenium.version>
+        <selenium.version>3.7.0</selenium.version>
         <selenium.utils>C:\Selenium</selenium.utils>
         <test.suite>testng.xml</test.suite>
         <hub.port>4444</hub.port>
