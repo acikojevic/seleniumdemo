@@ -16,9 +16,9 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version:'3.7.0'
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-server', version:'3.7.0'
-    compile group: 'org.testng', name: 'testng', version:'6.11'
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: version_selenium
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-server', version: version_selenium
+    compile group: 'org.testng', name: 'testng', version: version_testng
 }
 
 sourceSets {
@@ -34,7 +34,7 @@ task startHub {
 
 	doLast {
 		println("Starting selenium hub...")		
-        ant.java(jar: "C:/Selenium/selenium-server-standalone-3.7.0.jar", spawn: true, fork: true) {
+        ant.java(jar: selenium_standalone, spawn: true, fork: true) {
         	arg(value: "-role")
         	arg(value: "hub")             
    		} 
@@ -45,7 +45,7 @@ task startNode(dependsOn: startHub) {
     		
     doLast {
     	println("Starting selenium node...")	
-        ant.java(jar: "C:/Selenium/selenium-server-standalone-3.7.0.jar", spawn: true, fork: true) {
+        ant.java(jar: selenium_standalone, spawn: true, fork: true) {
         	arg(value: "-role")
         	arg(value: "node")
         	arg(value: "-hub")
@@ -66,6 +66,7 @@ task stopNode {
 }
 
 task stopHub(dependsOn: stopNode) {
+	
 	doLast {
 		def stopHubURL = "http://localhost:4444/lifecycle-manager?action=shutdown".toURL()
 		println("Shutting down hub: " + stopHubURL)
