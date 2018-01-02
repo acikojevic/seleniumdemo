@@ -13,6 +13,7 @@ public class GoogleSearch extends TestBase {
         driver.get("https://www.google.com");
         GoogleSearchPage googleSearchPage = new GoogleSearchPage(driver);
         googleSearchPage.searchByText("nekitekst");
-        Assert.assertTrue(googleSearchPage.isSearchResultFound());
+        
+        Assert.assertTrue(googleSearchPage.isSearchResultFound());     
     }
 }
