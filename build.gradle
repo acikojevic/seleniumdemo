@@ -81,7 +81,7 @@ task runTests(type: Test, dependsOn: startNode) {
 	testLogging.showStandardStreams = true	
 	useTestNG()
 	{
-		suites "testNG.xml"
+		suites "testNG.yaml"
 	}
 }
 

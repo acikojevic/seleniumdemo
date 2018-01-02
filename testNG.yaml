@@ -1,0 +1,9 @@
+name: Selenium Demo
+threadCount: 3
+parallel: false
+verbose: 4
+
+tests:
+  - name: Google Search Demo
+    classes:
+      - com.acikojevic.seleniumdemo.tests.GoogleSearch
