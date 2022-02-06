@@ -12,35 +12,37 @@ public class GoogleSearchPage extends PageObject {
 
     private String searchText;
 
-    @FindBy(id = "lst-ib")
+    @FindBy(css = "[role=search] input[type=text]")
     private WebElement searchBox;
 
-    @FindBy(css = "[role=search] input[name=btnK]")
-    private WebElement searchButton;
+    @FindBy(xpath = ".//button[contains(.,'I agree')]")
+    private WebElement acceptCookiesButton;
 
     public GoogleSearchPage(WebDriver driver) {
         super(driver);
     }
 
     public void searchByText(String searchText) {
-
         this.searchText = searchText;
+        acceptCookies();
         searchBox.sendKeys(searchText);
-        searchButton.sendKeys(Keys.ENTER);
+        searchBox.sendKeys(Keys.ENTER);
     }
 
     public boolean isSearchResultFound() {
-
         try {
             WebDriverWait wait = new WebDriverWait(driver, 10);
             wait.until(isTrue -> driver.getTitle().contains(searchText));
-
             return true;
         }
         catch (TimeoutException e) {
-
             return false;
         }
     }
 
+    private void acceptCookies() {
+        if (acceptCookiesButton.isDisplayed()) {
+            acceptCookiesButton.click();
+        }
+    }
 }
